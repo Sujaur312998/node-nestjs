@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Headers, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, ParseBoolPipe, ParseIntPipe, Patch, Post, Query, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { IdParamDto } from './dto/IdParam.dto';
 import { HeadersDto } from './dto/headers.dto';
 import { ParseIdPipe } from './pipes/parseIdPipes';
 import { ZodValidationPipe } from './pipes/zodValidationPipes';
 import { CreatePropertySchema, CreatePropertyZodDto } from './dto/createPropertyZod.dto';
+import { RequestHeader } from './pipes/request-header';
 
 @Controller('property')
 export class PropertyController {
@@ -31,8 +32,9 @@ export class PropertyController {
   update(
     @Param('id', ParseIdPipe)id,
     @Body() body: CreatePropertyDto,
-    @Headers('host') headers : HeadersDto
+    // @Headers() headers : HeadersDto
+    @RequestHeader(new ValidationPipe({whitelist:true, validateCustomDecorators:true})) headers: HeadersDto
   ) {
-    return body;
+    return headers;
   }
 }
