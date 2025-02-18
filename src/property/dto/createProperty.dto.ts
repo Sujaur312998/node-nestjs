@@ -11,5 +11,5 @@ export class CreatePropertyDto {
   description: string;
 
   @IsPositive()
-  area: number;
+  price: number;
 }
