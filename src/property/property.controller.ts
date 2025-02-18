@@ -6,35 +6,38 @@ import { ParseIdPipe } from './pipes/parseIdPipes';
 import { ZodValidationPipe } from './pipes/zodValidationPipes';
 import { CreatePropertySchema, CreatePropertyZodDto } from './dto/createPropertyZod.dto';
 import { RequestHeader } from './pipes/request-header';
+import { PropertyService } from './property.service';
 
 @Controller('property')
 export class PropertyController {
+  constructor(private propertyService: PropertyService) {
+  }
+
+
   @Get()
   findAll() {
-    return 'This action returns all properties';
+    return  this.propertyService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id, @Query('sort', ParseBoolPipe) sort) {
-    console.log(typeof id, id);
-    console.log(typeof sort, sort);
-    return id;
+    return this.propertyService.findOne();
   }
 
   @Post()
   // @UsePipes(new ValidationPipe({whitelist:true, forbidNonWhitelisted:true,groups:['create']}))
   @UsePipes(new ZodValidationPipe(CreatePropertySchema))
   create(@Body() body: CreatePropertyZodDto) {
-    return body;
+    return this.propertyService.create();
   }
 
   @Patch(':id')
   update(
-    @Param('id', ParseIdPipe)id,
+    @Param('id', ParseIdPipe) id,
     @Body() body: CreatePropertyDto,
     // @Headers() headers : HeadersDto
-    @RequestHeader(new ValidationPipe({whitelist:true, validateCustomDecorators:true})) headers: HeadersDto
+    @RequestHeader(new ValidationPipe({ whitelist: true, validateCustomDecorators: true })) headers: HeadersDto
   ) {
-    return headers;
+    return this.propertyService.update();
   }
 }
